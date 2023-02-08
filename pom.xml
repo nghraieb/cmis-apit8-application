@@ -312,6 +312,14 @@
             <scope>test</scope>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
+        <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+        </dependency>
+		<dependency>
+                <groupId>com.oracle.database.jdbc</groupId>
+                <artifactId>ojdbc8</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -999,10 +1007,7 @@
                     <artifactId>spring-boot-devtools</artifactId>
                     <optional>true</optional>
                 </dependency>
-                <dependency>
-                    <groupId>com.h2database</groupId>
-                    <artifactId>h2</artifactId>
-                </dependency>
+
             </dependencies>
             <build>
                 <plugins>
@@ -1101,10 +1106,6 @@
                     <artifactId>oracle-xe</artifactId>
                     <scope>test</scope>
                 </dependency>
-                <dependency>
-                    <groupId>com.oracle.database.jdbc</groupId>
-                    <artifactId>ojdbc8</artifactId>
-                </dependency>
             </dependencies>
             <build>
                 <pluginManagement>
@@ -1148,10 +1149,10 @@
                                 <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
                                 <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                                 <driver>oracle.jdbc.OracleDriver</driver>
-                                <url>jdbc:oracle:thin:@localhost:1521:xe</url>
+                                <url>jdbc:oracle:thin:@basdevvm:1521:cmisdev</url>
                                 <defaultSchemaName></defaultSchemaName>
-                                <username></username>
-                                <password></password>
+                                <username>cmis</username>
+                                <password>cmis2dev</password>
                                 <referenceUrl>hibernate:spring:com.ligado.api.domain?dialect=org.hibernate.dialect.Oracle12cDialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                                 <verbose>true</verbose>
                                 <logging>debug</logging>

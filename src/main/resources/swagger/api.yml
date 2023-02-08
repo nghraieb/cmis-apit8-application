@@ -1,15 +1,777 @@
+openapi: '3.0.3'
+info:
+  title: Swagger cmis API - OpenAPI 3.0
+  description: |-
+    Thia Ligado API is a set of tools, to communicate with a simole way with other service provider.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: support@Ligado.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about API
+  url: http://swagger.io
+#servers:
+#  - url: https://rest.ligado.com/api/v2
+tags:
+  - name: circuit switch
+    description: Everything about  Circuit Switch
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: Dispatch Radio
+    description: Everything about Dispatch Radio
 # API-first development with OpenAPI
 # This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
-openapi: '3.0.1'
-info:
-  title: 'cmisApiT8'
-  version: 0.0.1
+#openapi: '3.0.1'
+#info:
+#  title: 'cmisApiT6'
+#  version: 0.0.1
 servers:
-  - url: http://localhost:8090/api
+  - url: http://localhost:8086/api
     description: Development server
-  - url: https://localhost:8090/api
+  - url: https://localhost:8086/api
     description: Development server with TLS Profile
-paths: {}
+#paths: {}
+paths:
+  /circuitswitch/registration:
+    post:
+      tags:
+        - circuit switch
+      summary: Register a Sat ESN
+      description: Register a Sat ESN
+      operationId: registerESN
+      requestBody:
+        description: Register a sat ESN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterService'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/ISA:
+    post:
+      tags:
+        - circuit switch
+      summary: initial activation
+      description: initial activation
+      operationId: initialActivation
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/AddlActivation:
+    post:
+      tags:
+        - circuit switch
+      summary: Additional activation
+      description: Additional activation service id in 1010, 1110, 1111, 2010, 2110, 2111, 2114, 3010, 3110, 3111, 4010, 4110, 4111
+      operationId: AddlActivation
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/Deactivation:
+    post:
+      tags:
+        - circuit switch
+      summary: Deactivation 
+      description: Deactivation  service id in 1030, 1130, 1131, 2030, 2130, 2131, 2134, 3030, 3130, 3131, 4030, 4130, 4131
+      operationId: deactivation
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/CallFeatures:
+    post:
+      tags:
+        - circuit switch
+      summary: Call Features 
+      description: Call Features activation service id in 9000, 9001, 9019, 9016, 9017, 9005, 9006, 9028
+      operationId: CallFeatures
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service        
+  /circuitswitch/VoiceMail:
+    post:
+      tags:
+        - circuit switch
+      summary: Call Features 
+      description: >
+            Voice Mail service activation
+            
+              1211  Fixed Class 1 Activation     
+              1212  Fixed Class 2 Activation      
+              2211  Mobile Class 1 Activation     
+              2212  Mobile Class 2 Activation     
+              3211  Marine Class 1 Activation     
+              3212  Marine Class 2 Activation     
+              4211  Aero Class 1 Activation     
+              4212  Aero Class 2 Activation     
+              -------------------------
+              1231  Fixed Class 1 Deactivation     
+              1232  Fixed Class 2 Deactivation     
+              2231  Mobile Class 1 Deactivation     
+              2232  Mobile Class 2 Deactivation     
+              3231  Marine Class 1 Deactivation     
+              3232  Marine Class 2 Deactivation     
+              4231  Aero Class 1 Deactivation     
+              4232  Aero Class 2 Deactivation
+      operationId: VoiceMail
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service                    
+  /circuitswitch/StateChange:
+    post:
+      tags:
+        - circuit switch
+      summary: State Change
+      description: >
+            State Cahnge     
+              9002 Communicator Suspension     
+              9007 Communicator Resumption     
+              9012 Communicator Deregistration     
+              9013 Communicator Deauthorization     
+              9014 Communicator Reauthorization     
+              9018 Communicator State Change
+      operationId: StateChange
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1000
+        - name: service_id
+          in: query
+          description: Service id 
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 4
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service                    
+  /circuitswitch/MTSwap:
+    post:
+      tags:
+        - circuit switch
+      summary: MT Swap
+      description:  >
+            MT Swap     
+              9015 Communicator swap      
+      operationId: MTSwap
+      parameters:
+        - name: mt_id
+          in: query
+          description: ID of mt
+          required: true
+          schema:
+            type: number
+            format: float
+            minimum: 1000
+        - name: new_sat_esn
+          in: query
+          description: new sat esn
+          required: true
+          schema:
+            type: number
+            format: float
+            minLength: 8
+            maxLength: 8
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/succesResponse'          
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'          
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service                    
+  /circuitswitch/findBySpMsgId:
+    get:
+      tags:
+        - circuit switch
+      summary: Query Response by SP Message Id  
+      description: Return detail response using Message ID
+      operationId: findBySpMsgId
+      parameters:
+        - name: sp_msg_id
+          in: query
+          description: Message ID key for filter
+          required: true
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/CircuitSwitchMsId'          
+            application/xml:
+              schema:
+                  $ref: '#/components/schemas/CircuitSwitchMsId'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/findBySpServiceId:
+    get:
+      tags:
+        - circuit switch
+      summary: Query Response by SP Service Id  
+      description: Return detail response using Service ID
+      operationId: findBySpSrId
+      parameters:
+        - name: service_id
+          in: query
+          description: Service ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CircuitSwitchSrIdList'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CircuitSwitchSrIdList'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service
+  /circuitswitch/findByESNId:
+    get:
+      tags:
+        - circuit switch
+      summary: Query request by ESN Id  
+      description: Return detail request using ESN ID
+      operationId: findByESNId
+      parameters:
+        - name: MT_id
+          in: query
+          description: ESN ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchESNIdList'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchESNIdList'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service            
+  /circuitswitch/findByMTId:
+    get:
+      tags:
+        - circuit switch
+      summary: Query MT Information 
+      description: Return MT Information
+      operationId: findByMtInfo
+      parameters:
+        - name: MT_id
+          in: query
+          description: MT ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtIdList'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtIdList'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service  
+  /circuitswitch/findMtInfo:
+    get:
+      tags:
+        - circuit switch
+      summary:  MT Services for Billing Account
+      description: Return MT Services for Billing Account
+      operationId: findMtInfo
+      parameters:
+        - name: paramDist
+          in: query
+          description: Distributer 
+          required: true
+          schema:
+            type: object
+            properties:
+              mt_id:
+                type: integer
+                format: int64
+              sat_esn:        
+                type: string
+                description: Sat ESN
+                example: 12912654
+              telephone_number:
+                type: string
+                description: Account Number  
+                example: null    
+              toll_free_number:
+                type: string
+                description: Toll Free No  
+                example: null    
+              did_number:
+                type: string
+                description: phone number
+                example: null
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtInfo'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtInfo'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service     
+  /circuitswitch/findServiceByDistId:
+    get:
+      tags:
+        - circuit switch
+      summary:  MT Services for Billing Account
+      description: Return MT Services for Billing Account
+      operationId: findserviceByDistId
+      parameters:
+        - name: bill_dist
+          in: query
+          description: billing dist ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchServicePerDist'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchServicePerDist'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service     
+  /circuitswitch/findCallByDistId:
+    get:
+      tags:
+        - circuit switch
+      summary:  Call Barring for Billing Account
+      description: Return MT having Call Baring
+      operationId: findCallByDistId
+      parameters:
+        - name: bill_dist
+          in: query
+          description: billing dist ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchCallIntPerDist'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchCallIntPerDist'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service     
+  /circuitswitch/findCallIntByDistId:
+    get:
+      tags:
+        - circuit switch
+      summary: International Call Barring for Billing Account
+      description: Return MT having Internatioanl Call Baring
+      operationId: findCallIntByDistId
+      parameters:
+        - name: bill_dist
+          in: query
+          description: billing dist ID key for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchCallIntPerDist'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchCallIntPerDist'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service     
+  /circuitswitch/findByDistId:
+    get:
+      tags:
+        - circuit switch
+      summary: Query All MT's for Login Distributor
+      description: Return detail request using MT ID
+      operationId: findByDistId
+      parameters:
+        - name: paramDist
+          in: query
+          description: Distributer 
+          required: true
+          schema:
+            type: object
+            properties:
+              dist_id:
+                description: Distributeur id
+                type: string
+              login_dist:
+                description: Distributeur login
+                type: string
+              bill_dist:
+                description: Distributeur Billing account
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtIdPerDistList'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CircuitSwitchMtIdPerDistList'
+        '400':
+          description: Invalid status value
+      security:
+        - cmis_auth:
+            - write:service
+            - read:service            
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system
+      description: ''
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
 components:
   responses:
     Problem:
@@ -29,6 +791,631 @@ components:
       type: http
       description: Basic Authentication
       scheme: basic
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        phone:
+          type: string
+          example: '12345'
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+      xml:
+        name: user
+    RegisterService:
+      required:
+        - sp_mt_ref
+        - dist_bill_account_id
+        - subscriber_prov
+        - subscriber_timezone
+        - location_prov
+        - sat_esn
+        - location
+        - mt_class_id
+        - virtual_network_id
+      type: object
+      properties:
+        dist_bill_account_id:
+          type: integer
+          format: int64
+          example: 10
+        sp_mt_ref:
+          type: integer
+          format: int64
+          example: 1040
+        subscriber_prov:
+          type: string
+          enum: [AB,AG,AH,AK,AL,AR,AZ,BC,CA,CO,CT,DC,DE,FL,GA,HI,HN,HW,IA,ID,IL,IN,KS,KT,KY,LA,MA,MB,MD,ME,MI,MN,MO,MS,MT,MX,NB,NC,ND,NE,NH,NJ,NL,NM,NS,NT,NV,NY,OH,OK,ON,OR,PA,PC,PE,PQ,PR,RI,SC,SD,SK,TN,TX,UT,VA,VI,VO,VT,WA,WI,WV,WY,YT]
+          example: ON
+        subscriber_timezone:
+          type: string
+          enum: [Newfoundland  and  Labrador, Atlantic, Eastern,Central,Mountain,Pacific,Alaska/Hawaii]
+        location_prov:
+          type: string
+          enum: [AB,AG,AH,AK,AL,AR,AZ,BC,CA,CO,CT,DC,DE,FL,GA,HI,HN,HW,IA,ID,IL,IN,KS,KT,KY,LA,MA,MB,MD,ME,MI,MN,MO,MS,MT,MX,NB,NC,ND,NE,NH,NJ,NL,NM,NS,NT,NV,NY,OH,OK,ON,OR,PA,PC,PE,PQ,PR,RI,SC,SD,SK,TN,TX,UT,VA,VI,VO,VT,WA,WI,WV,WY,YT]
+        sat_esn:
+          type: string
+          example: 12345678
+        location:
+          type: string
+          example: 13 ON OTTAWA-HULL 
+        mt_class_id:
+          type: string
+          example:           2 - Fixed Communicator            
+        virtual_network_id:
+          type: string
+          example: 116-TMIC VN 116 - FIXED
+    CircuitSwitchMsId:
+      type: object
+      properties:
+        the_sp_so_type:
+          type: string
+          description: SO Type
+          example: CS
+        sp_so_ref:
+          type: string
+          description: SP SO Reference
+          example: TMIC
+        sp_mt_ref:
+          type: string
+          description: SP MT Reference
+          example: 1040
+        service_id:
+          type: string
+          description: Service Id
+          example: 1040
+        so_id:
+          type: string
+          description: Service Order Id
+          example: 0
+        so_ship_timestamp:
+          type: string
+          description: SO Ship Timestamp
+          example: null
+        status:
+          type: string
+          description: Service Order Status
+          example: null
+        error_code:
+          type: string
+          description: Error Code
+          example: -20492
+        error_text:
+          type: string
+          description: Error Text
+          example: No available telephone numbers for this distributor and service type
+        dist_id:
+          type: string
+          description: Distributor Id
+          example: TMIC
+        dist_bill_account_id:
+          type: string
+          description: Billing Account
+          example: 5109
+        mt_id:
+          type: string
+          description: MT Id
+          example: 0
+        sat_esn:        
+          type: string
+          description: Sat ESN
+          example: 123
+        mt_state:
+          type: string
+          description: MT Commanded State
+          example: null
+        mt_sask:
+          type: string
+          description: MT SASK
+          example: null
+        commissioning_frequency:
+          type: number
+          format: double
+          description: Commissioning Frequency
+          example: 0
+        pilot_frequency:        
+          type: number
+          format: double
+          description: Pilot Frequency  
+          example: 0
+        telephone_number:
+          type: string
+          description: Account Number  
+          example: null    
+    CircuitSwitchSrIdList:
+      type: object
+      properties:
+        service_id:
+          type: string
+          description: Service Id
+          example: 1040
+        service_name:
+          type: string
+          description: Service name
+          example: Fixed Voice Registration
+        dist_id:
+          type: string
+          description: Distributor Id
+          example: TMIC
+        dist_bill_account_id:
+          type: string
+          description: Billing Account
+          example: 5109
+        CircuitSwitchSrIdLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchSrId'
+          description: Liste des paramètres de service
+    CircuitSwitchSrId:
+      type: object
+      properties:
+        msg_id:
+          type: number
+          format: double
+          description: message id
+          example: CS
+        so_id:
+          type: number
+          format: double
+          description: Service Order Id
+          example: 0
+        status:
+          type: string
+          description: Service Order Status
+          example: null
+        ship_timestamp:
+          type: string
+          description: SO Type
+          example: CS
+        mt_id:
+          type: number
+          format: double
+          description: MT Id
+          example: 0        
+        telephone_number:
+          type: number
+          format: double
+          description: Account Number  
+        sat_esn:        
+          type: number
+          format: double
+          description: Sat ESN
+          example: 123
+    CircuitSwitchESNIdList:
+      type: object
+      properties:
+        service_name:
+          type: string
+          description: Service name
+          example: Fixed Voice Registration
+        CircuitSwitchMtIdLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchESNId'
+          description: Liste des paramètres de service
+    CircuitSwitchESNId:
+      type: object
+      properties:
+        msg_id:
+          type: number
+          format: double
+          description: message id
+          example: CS
+        dist_id:
+          type: string
+          description: Distributor Id
+          example: TMIC
+        dist_bill_account_id:
+          type: number
+          format: double
+          description: acct Id
+          example: 1040
+        service_id:
+          type: number
+          format: double
+          description: Service Id
+          example: 1040
+        so_rqst_date:
+          type: string
+          description: Request Date
+          example: 2023-01-25 12:39:06
+        telephone_number:
+          type: number
+          format: double
+          description: Account Number  
+        virtual_network_id:
+          type: number
+          format: double
+          description: VN
+          example: 101
+        mt_id:
+          type: number
+          format: double
+          description: MT Id
+          example: 0     
+    CircuitSwitchCallIntPerDist:
+      type: object
+      properties:
+        mt_id:
+          type: string
+          description: MT id
+          example: 0
+        virtual_network_id:
+          type: string
+          description: VN
+          example: 101
+        control_group_id:
+          type: string
+          description: control Group Id
+          example: 1040
+    CircuitSwitchServicePerDist:
+      type: object
+      properties:
+        mt_id:
+          type: string
+          description: MT Id
+          example: 0        
+        sat_esn:        
+          type: string
+          description: Sat ESN
+          example: 123
+        default_virtual_network:
+          type: string
+          description: Def VN
+          example: 4400
+        control_group_id:
+          type: string
+          description: CG
+          example: 2
+        service_call_type:
+          type: string
+          description: service call type
+          example: VOICE
+        mt_signaling_code:
+          type: string
+          description: signaling code
+          example: 00
+        telephone_number:
+          type: string
+          description: Account Number  
+          example: null    
+        toll_free_number:
+          type: string
+          description: Toll Free No  
+          example: null    
+        did_number:
+          type: string
+          description: did number  
+          example: null    
+    CircuitSwitchMtInfo:
+      type: object
+      properties:
+        mt_type:
+          type: string
+          description: mt type
+          example: CS
+        mt_id:
+          type: string
+          description: mt id
+          example: 178826
+        dist_id:
+          type: string
+          description: TMIC
+          example: CS
+        dist_bill_account_id:
+          type: string
+          description: Billing Account
+          example: CS
+        billing_state:
+          type: string
+          description: Billing State
+          example: Active
+        mt_state:
+          type: string
+          description: Commanded State
+          example: Operational
+        sat_esn:
+          type: string
+          description: Sat ESN  
+          example: 16419845
+        rtin:
+          type: string
+          description: RTIN
+          example: 11469301
+        default_virtual_network:
+          type: string
+          description: Def VN
+          example: 4400
+        mt_sask_dec:
+          type: string
+          description: MT SASK
+          example: 48648539073536143406
+        l_band_beam:
+          type: string
+          description: Beam
+          example: 1
+        commissioning_frequency:
+          type: string
+          description: Commissioning Frequency
+          example: 1555923000
+        pilot_frequency:
+          type: string
+          description: Pilot Frequency
+          example: 1556334000
+        CircuitSwitchSrvLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchMtSrv'
+          description: Liste des paramètres de service
+        CircuitSwitchSrvBarLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchMtSrvBar'
+          description: Liste des paramètres de service
+        CircuitSwitchGPSLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchMtGps'
+          description: Liste des paramètres de service
+    CircuitSwitchMtSrv:
+      type: object
+      properties:
+        mt_signaling_code:
+          type: string
+          description: Sc
+          example: 00        
+        virtual_network_id:        
+          type: string
+          description: Sat ESN
+          example: 123
+        control_group_id:
+          type: string
+          description: CG
+          example: 2
+        service_call_type:
+          type: string
+          description: service call type
+          example: VOICE
+        telephone_number:
+          type: string
+          description: Account Number  
+          example: null    
+        toll_free_number:
+          type: string
+          description: Toll Free No  
+          example: 8667048452    
+        did_number:
+          type: string
+          description: did number  
+          example: null    
+    CircuitSwitchMtSrvBar:
+      type: object
+      properties:
+        mt_signaling_code:
+          type: string
+          description: Sc
+          example: 00        
+        virtual_network_id:        
+          type: string
+          description: Sat ESN
+          example: 123
+        control_group_id:
+          type: string
+          description: CG
+          example: 2
+        service_call_type:
+          type: string
+          description: service call type
+          example: VOICE
+        telephone_number:
+          type: string
+          description: Account Number  
+          example: null    
+        toll_free_number:
+          type: string
+          description: Toll Free No  
+          example: 8667048452    
+        did_number:
+          type: string
+          description: did number  
+          example: null    
+    CircuitSwitchMtGps:
+      type: object
+      properties:
+        gps_host_id:
+          type: string
+          description: GPS Host Id
+          example: 280    
+        gps_host_name:
+          type: string
+          description: GPS Host Name
+          example: Missing    
+        account_id:
+          type: string
+          description: GPS Account Id
+          example: Missing    
+        account_name:
+          type: string
+          description: GPS Account Name
+          example: Missing    
+        account_state:
+          type: string
+          description: Account Status
+          example: Missing    
+    CircuitSwitchMtIdList:
+      type: object
+      properties:
+        service_name:
+          type: string
+          description: Service name
+          example: Fixed Voice Registration
+        CircuitSwitchMtIdLis:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchMtId'
+          description: Liste des paramètres de service
+    CircuitSwitchMtId:
+      type: object
+      properties:
+        so_id:
+          type: string
+          description: Service Order Id
+          example: 0
+        dist_id:
+          type: string
+          description: Distributor Id
+          example: TMIC
+        dist_bill_account_id:
+          type: string
+          description: acct Id
+          example: 1040
+        service_id:
+          type: string
+          description: Service Id
+          example: 1040
+        so_timestamp:
+          type: string
+          description: Order Date
+          example: 2023-01-25 12:39:06
+        so_status:
+          type: string
+          description: Order status
+          example: Complete
+        virtual_network_id:
+          type: string
+          description: VN
+          example: 101
+        telephone_number:
+          type: string
+          description: Account Number  
+        error_code:
+          type: string
+          description: Error code
+          example: 0    
+    CircuitSwitchMtIdPerDistList:
+      type: object
+      properties:
+        dist_bill_account_id:
+          type: string
+          description: acct Id
+          example: 1040
+        CircuitSwitchMtIdPerDist:
+          type: array
+          items:
+            $ref: '#/components/schemas/CircuitSwitchMtIdPerDist'
+          description: Liste des paramètres de service
+    CircuitSwitchMtIdPerDist:
+      required:
+        - the_sp_so_type
+      type: object
+      properties:
+        mt_id:
+          type: string
+          description: MT Id
+          example: 0        
+        sat_esn:        
+          type: string
+          description: Sat ESN
+          example: 123
+        ftin:
+          type: string
+          description: FTIN
+          example: 75870
+        rtin:
+          type: string
+          description: RTIN
+          example: 11469301
+        control_group_id:
+          type: string
+          description: CG
+          example: 2
+        default_virtual_network:
+          type: string
+          description: Def VN
+          example: 4400
+        mt_state:
+          type: string
+          description: Commanded State
+          example: Operational
+        billing_state:
+          type: string
+          description: Billing State
+          example: Active
+    succesResponse:
+      type: object
+      properties:
+        sp_msg_id:
+          description: Message ID key 
+          type: number
+          format: flaot
+          example: 123654
+        dist_id:
+          description: Dist Id
+          type: string
+          example: NIRT
+        sp_system_id:
+          description: SP System ID
+          type: string
+          example: NIRTWEB
+        service_id:
+          description: Service ID
+          type: number
+          format: flaot
+          example: 1040
+        sat_esn:
+          description: SAT ESN
+          type: number
+          format: flaot
+          example: Active
+        mt_id:
+          description:  Id
+          example: Active
+          type: number
+          format: flaot
+    errorResponse:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: error_code
+          example: -215632        
+        error_message:
+          type: string
+          format: flaot        
+          description: Sat ESN
+          example: The MT is not actif
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+          
 security:
   - jwt: []
   - basic: []
