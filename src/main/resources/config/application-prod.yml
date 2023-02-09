@@ -38,7 +38,7 @@ spring:
     password: cmis2dev
     hikari:
       poolName: Hikari
-      auto-commit: true
+      auto-commit: false
   jpa:
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:

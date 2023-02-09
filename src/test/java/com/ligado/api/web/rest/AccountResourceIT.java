@@ -561,6 +561,7 @@ class AccountResourceIT {
     void testChangePassword() throws Exception {
         User user = new User();
         String currentPassword = RandomStringUtils.randomAlphanumeric(60);
+        String newPassword = RandomStringUtils.randomAlphanumeric(60);
         user.setPassword(passwordEncoder.encode(currentPassword));
         user.setLogin("change-password");
         user.setEmail("change-password@example.com");
@@ -570,12 +571,12 @@ class AccountResourceIT {
             .perform(
                 post("/api/account/change-password")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, "new password")))
+                    .content(TestUtil.convertObjectToJsonBytes(new PasswordChangeDTO(currentPassword, newPassword)))
             )
             .andExpect(status().isOk());
 
         User updatedUser = userRepository.findOneByLogin("change-password").orElse(null);
-        assertThat(passwordEncoder.matches("new password", updatedUser.getPassword())).isTrue();
+        assertThat(passwordEncoder.matches(newPassword, updatedUser.getPassword())).isTrue();
     }
 
     @Test

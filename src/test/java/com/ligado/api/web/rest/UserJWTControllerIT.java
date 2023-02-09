@@ -64,6 +64,7 @@ class UserJWTControllerIT {
     @Transactional
     void testAuthorizeWithRememberMe() throws Exception {
         User user = new User();
+        
         user.setLogin("user-jwt-controller-remember-me");
         user.setEmail("user-jwt-controller-remember-me@example.com");
         user.setActivated(true);
