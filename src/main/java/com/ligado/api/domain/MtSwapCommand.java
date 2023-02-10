@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,8 +69,9 @@ public class MtSwapCommand extends Command {
 		// TODO Auto-generated method stub
 		int CS_SO_TYP = 2;
 
-		// TODO find login
-		String the_login_dist_id = "TMIC";
+		
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String the_login_dist_id  = userDetails.getUsername();
 
 		String sqlSelectSOType = "SELECT billing_state,dist_bill_account_id,subscriber_prov,"
 				+ "       subscriber_timezone,sat_esn,so_type,sp_mt_ref,"

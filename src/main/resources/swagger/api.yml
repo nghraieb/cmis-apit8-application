@@ -870,6 +870,10 @@ components:
     CircuitSwitchMsId:
       type: object
       properties:
+        sp_msg_id:
+          type: string
+          description: sp_msg_id
+          example: 1040
         the_sp_so_type:
           type: string
           description: SO Type

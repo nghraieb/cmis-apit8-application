@@ -10,10 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.ligado.api.domain.MtSwapCommand;
+import com.ligado.api.domain.query.GetRequestByMsIdQuery;
+import com.ligado.api.exception.MsException;
 import com.ligado.api.domain.Command;
 import com.ligado.api.service.Service;
+import com.ligado.api.service.api.dto.CircuitSwitchMsId;
 import com.ligado.api.service.api.dto.SuccesResponse;
 import com.ligado.api.web.api.CircuitswitchApiDelegate;
+
 @org.springframework.stereotype.Service
 public class CircuitswitchApiDelegateImpl implements CircuitswitchApiDelegate {
 	@Autowired
@@ -21,6 +25,9 @@ public class CircuitswitchApiDelegateImpl implements CircuitswitchApiDelegate {
 
 	@Autowired
 	ApplicationContext context;
+
+	@Autowired
+	GetRequestByMsIdQuery getRequestByMsIdQuery ;
 
 	@Override
 	public ResponseEntity<SuccesResponse> mTSwap(Float mtId, Float newSatEsn) {
@@ -43,5 +50,27 @@ public class CircuitswitchApiDelegateImpl implements CircuitswitchApiDelegate {
 
 		MtSwapCommand command = new MtSwapCommand();//(MtSwapCommand) context.getBean("MtSwapCommand");
 		return command.mtId(mtId).newSatEsn(newSatEsn);
+	}
+	
+	
+	@Override
+	public ResponseEntity<CircuitSwitchMsId> findBySpMsgId(Float spMsgId) {
+		// TODO Auto-generated method stub
+		getRequestByMsIdQuery = fillGetRequestByMsIdQuery(spMsgId) ;
+		CircuitSwitchMsId result=null;
+		try {
+			result = (CircuitSwitchMsId) getRequestByMsIdQuery.execute();
+		} catch (MsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		MDC.clear();
+		return  ResponseEntity.ok().body(result) ;
+	}
+
+	private GetRequestByMsIdQuery fillGetRequestByMsIdQuery(Float spMsgId) {
+
+		getRequestByMsIdQuery.setSpMsgId(spMsgId);
+		return getRequestByMsIdQuery;
 	}
 }
