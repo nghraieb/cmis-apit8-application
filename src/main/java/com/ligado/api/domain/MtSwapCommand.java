@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ligado.api.exception.BadCommandDataException;
+import com.ligado.api.security.SecurityUtils;
 import com.ligado.api.service.api.dto.SuccesResponse;
 
 //@Entity
@@ -35,6 +37,17 @@ public class MtSwapCommand extends Command {
 	private BigDecimal newSatEsn;
 
 	private BigDecimal the_service_id = BigDecimal.valueOf(9015);
+	
+	
+	private String the_login_dist_id;
+
+	public String getThe_login_dist_id() {
+		return the_login_dist_id;
+	}
+
+	public void setThe_login_dist_id(String the_login_dist_id) {
+		this.the_login_dist_id = the_login_dist_id;
+	}
 
 	public BigDecimal getMtId() {
 		return mtId;
@@ -69,14 +82,10 @@ public class MtSwapCommand extends Command {
 		// TODO Auto-generated method stub
 		int CS_SO_TYP = 2;
 
-		
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String the_login_dist_id  = userDetails.getUsername();
 
 		String sqlSelectSOType = "SELECT billing_state,dist_bill_account_id,subscriber_prov,"
 				+ "       subscriber_timezone,sat_esn,so_type,sp_mt_ref,"
-				+ "       mt_commanded_state,dh_mt_commanded_state" 
-				+ " FROM  web_generic_mt_request_v"
+				+ "       mt_commanded_state,dh_mt_commanded_state" + " FROM  web_generic_mt_request_v"
 				+ " WHERE mt_id         = ?" + " AND   login_dist_id = ?";
 
 		List<Map<String, Object>> getMtInformationRows = jdbcMs.queryForList(sqlSelectSOType, mtId, the_login_dist_id);
@@ -106,13 +115,11 @@ public class MtSwapCommand extends Command {
 			throw new BadCommandDataException(
 					"WEBA-20114: Error - this MT is disconnected. Cannot order service " + the_service_id + ".");
 		}
-		
-				
+
 		if (the_mt_commanded_state != null && the_mt_commanded_state.longValue() == 2) {
-			throw new BadCommandDataException(
-					"WEBA-20118: Error - this MT is Operational. Cannot order service.");
+			throw new BadCommandDataException("WEBA-20118: Error - this MT is Operational. Cannot order service.");
 		}
-	
+
 		String sqlSelect1 = "SELECT sp_ext_sequence_number,dist_id,sp_system_id,sp_user_id"
 				+ " FROM  web_spi_current_sessions_log_v" + " WHERE login_dist_id        = ?"
 				+ " AND   dist_bill_account_id = ?" + " FOR UPDATE OF sp_ext_sequence_number";
@@ -145,62 +152,57 @@ public class MtSwapCommand extends Command {
 		if (getSelectProvRows.isEmpty()) {
 			the_location_name = "OTTAWA";
 			the_location_prov = "ON";
-			
-			
+
 		}
-		
+
 		Connection con = jdbcMs.getDataSource().getConnection();
-		
-		
-	
+
 		String sqlUpdate = "UPDATE spi_current_sessions_log" + " SET   sp_ext_sequence_number = ?"
 				+ " WHERE dist_id      = ?" + " AND   sp_system_id = ?";
-		
+
 		PreparedStatement prepareSt = con.prepareStatement(sqlUpdate);
-		prepareSt.setBigDecimal(1,   (the_msg_id.add(BigDecimal.valueOf(1))));
-		prepareSt.setString(2,   the_mt_dist_id);
+		prepareSt.setBigDecimal(1, (the_msg_id.add(BigDecimal.valueOf(1))));
+		prepareSt.setString(2, the_mt_dist_id);
 		prepareSt.setString(3, the_sp_system_id);
 		prepareSt.execute();
-		
+
 		prepareSt.close();
-		
-		
+
 		String sqlInsert1 = "INSERT INTO spi_inbound_log"
 				+ "(sp_msg_id,dist_id,sp_system_id,sp_msg_timestamp,sp_user_id,sp_msg_type)" + "VALUES (?,?,?,?,?,?)";
 
 		Date time = new java.sql.Date(new java.util.Date().getTime());
-	//	jdbcMs.update(sqlInsert1, the_msg_id, the_mt_dist_id, the_sp_system_id, time, the_sp_user_id,
-		//the_sp_msg_type);
+		// jdbcMs.update(sqlInsert1, the_msg_id, the_mt_dist_id, the_sp_system_id, time,
+		// the_sp_user_id,
+		// the_sp_msg_type);
 
-		
 		PreparedStatement prepareSt2 = con.prepareStatement(sqlInsert1);
-		prepareSt2.setBigDecimal(1,   the_msg_id);
-		prepareSt2.setString(2,   the_mt_dist_id);
+		prepareSt2.setBigDecimal(1, the_msg_id);
+		prepareSt2.setString(2, the_mt_dist_id);
 		prepareSt2.setString(3, the_sp_system_id);
 		prepareSt2.setDate(4, time);
 		prepareSt2.setString(5, the_sp_user_id);
 		prepareSt2.setLong(6, the_sp_msg_type);
 		prepareSt2.execute();
-		
+
 		prepareSt2.close();
-		
-	
-		
+
 		String sqlInsert = "INSERT INTO cs_service_request" + "( sp_msg_id,dist_id,sp_system_id,dist_bill_account_id,"
 				+ "  sp_so_ref,service_id,created_dt,rtin,mt_id,sp_mt_ref,"
 				+ "  subscriber_prov,subscriber_timezone,processed_flag,"
 				+ "  so_rqst_cs_param_1,so_rqst_cs_param_2,so_rqst_cs_param_3)"
 				+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		/*jdbcMs.update(sqlInsert,
-		 *  the_msg_id, the_mt_dist_id, the_sp_system_id, the_dist_bill_account_id,
-				the_login_dist_id, the_service_id, time, the_sat_esn, mtId, the_sp_mt_ref, ,
-				the_subscriber_timezone, 0, newSatEsn, the_location_name, the_location_prov);
-*/
-		
+		/*
+		 * jdbcMs.update(sqlInsert, the_msg_id, the_mt_dist_id, the_sp_system_id,
+		 * the_dist_bill_account_id, the_login_dist_id, the_service_id, time,
+		 * the_sat_esn, mtId, the_sp_mt_ref, , the_subscriber_timezone, 0, newSatEsn,
+		 * the_location_name, the_location_prov);
+		 */
+
 		PreparedStatement prepareSt3 = con.prepareStatement(sqlInsert);
-		prepareSt3.setBigDecimal(1,   the_msg_id);
-		prepareSt3.setString(2,   the_mt_dist_id);
+		prepareSt3.setBigDecimal(1, the_msg_id);
+		prepareSt3.setString(2, the_mt_dist_id);
 		prepareSt3.setString(3, the_sp_system_id);
 		prepareSt3.setBigDecimal(4, the_dist_bill_account_id);
 		prepareSt3.setString(5, the_login_dist_id);
@@ -218,11 +220,11 @@ public class MtSwapCommand extends Command {
 		prepareSt3.execute();
 		prepareSt3.close();
 		con.commit();
-		
-		SuccesResponse result = new SuccesResponse();
 
-		result.spMsgId(the_msg_id).distId(the_mt_dist_id).spSystemId(the_sp_system_id)
-				.serviceId(the_service_id ).satEsn(the_sat_esn).mtId(mtId);
+		SuccesResponseDomain result = new SuccesResponseDomain();
+
+		result.spMsgId(the_msg_id).distId(the_mt_dist_id).spSystemId(the_sp_system_id).serviceId(the_service_id)
+				.satEsn(the_sat_esn).mtId(mtId);
 
 		return result;
 	}
@@ -231,6 +233,11 @@ public class MtSwapCommand extends Command {
 	public Object fillAndValidate() {
 		// TODO Auto-generated method stub
 		return super.fillAndValidate();
+	}
+
+	public Command loginDistId(String the_login_dist_id2) {
+		the_login_dist_id=the_login_dist_id2;
+		return this;
 	}
 
 }

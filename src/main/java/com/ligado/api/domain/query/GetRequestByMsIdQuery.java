@@ -16,7 +16,12 @@ public class GetRequestByMsIdQuery extends MsQuery {
 	static String PD_SO_TYP = "PD";
 	static String GP_SO_TYP = "GP";
 
-	private Float spMsgId;
+	private  Float spMsgId;
+	private String distId;
+	public void setDistId(String distId) {
+		this.distId = distId;
+	}
+
 	@Autowired
 	private JdbcTemplate jdbcBscs;
 
@@ -31,12 +36,10 @@ public class GetRequestByMsIdQuery extends MsQuery {
 	}
 
 	@Override
-	public CircuitSwitchMsId executeInternal() {
+	public CircuitSwitchMsIdDomain executeInternal() {
 
-		// TODO get distributer from token
 		
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String l_dist_id = userDetails.getUsername();
+		String l_dist_id = distId;
 
 	/*	context.getAuthentication()
         .getPrincipal();*/
@@ -68,7 +71,7 @@ public class GetRequestByMsIdQuery extends MsQuery {
 		sqlSelectSPMsg = sqlSelectSPMsg + " WHERE dist_id   = ?" + " AND   sp_msg_id = ?";
 
 		return jdbcBscs.queryForObject(sqlSelectSPMsg, new Object[] { l_dist_id, spMsgId }, (rs, rowNum) -> {
-			return new CircuitSwitchMsId()
+			return new CircuitSwitchMsIdDomain()
 					.theSpSoType(the_sp_msg_type)
 					.spMsgId(rs.getString("sp_msg_id"))
 					.spSoRef(rs.getString("sp_so_ref"))
