@@ -62,7 +62,7 @@ pipeline {
         }
         stage('Build and Push Docker') {
             when {
-                branch 'develop'
+                branch 'main'
             }
             steps {
                 sh "./mvnw -ntp jib:build -Pprod -DsendCredentialsOverHttp=true -Dcheckstyle.skip -DskipTests"
@@ -70,7 +70,7 @@ pipeline {
         }
         stage ('Installation') {
             when {
-                branch 'develop'
+                branch 'main'
             }
             steps{
                 sh "docker service update --with-registry-auth --image 172.20.38.42:8184/contract:latest bscsms_contract"
